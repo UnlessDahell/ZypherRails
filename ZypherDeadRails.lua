@@ -34,7 +34,7 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local MainTab = Window:CreateTab("Main Tab", "house")
+local MainTab = Window:CreateTab("Main Tab", "home")
 
 Rayfield:Notify({
     Title = "Zypher Notifying",
@@ -52,7 +52,7 @@ local Button4 = MainTab:CreateButton({
     end,
 })
 
-local AimTab = Window:CreateTab("Aim FOV", 4483362458)
+local AimTab = Window:CreateTab("Aimbot", "crosshair")
 
 local AimSettings = {
     Enabled = false,
@@ -169,3 +169,77 @@ game:GetService("RunService").RenderStepped:Connect(function()
         end
     end
 end)
+
+local Highlights = {
+    Guns = false,
+    Ammo = false,
+    Armor = false
+}
+
+local function applyItemHighlight(item)
+    if not item:IsA("Model") then return end
+
+    local existingHighlight = item:FindFirstChild("Item_Highlight")
+    if existingHighlight then existingHighlight:Destroy() end
+
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "Item_Highlight"
+    highlight.Parent = item
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.FillTransparency = 0.3
+    highlight.OutlineTransparency = 0
+
+    local itemName = item.Name:lower()
+
+    if (itemName:find("ammo") or itemName:find("bullet")) and Highlights.Ammo then
+        highlight.FillColor = Color3.fromRGB(255, 255, 255) 
+    elseif (itemName:find("gun") or itemName:find("rifle") or itemName:find("pistol") or itemName:find("shotgun")) and Highlights.Guns then
+        highlight.FillColor = Color3.fromRGB(0, 0, 255) 
+    elseif itemName:find("armor") and Highlights.Armor then
+        highlight.FillColor = Color3.fromRGB(0, 0, 255) 
+    else
+        highlight:Destroy() 
+    end
+end
+
+local function updateAllItems()
+    for _, item in pairs(workspace:GetChildren()) do
+        applyItemHighlight(item)
+    end
+end
+
+workspace.ChildAdded:Connect(function(obj)
+    task.wait(0.1)
+    applyItemHighlight(obj)
+end)
+
+local VirsualTab = Window:CreateTab("Virsual", "eye")
+
+Tab:CreateToggle({
+    Name = "Highlight Guns",
+    CurrentValue = false,
+    Callback = function(value)
+        Highlights.Guns = value
+        updateAllItems()
+    end
+})
+
+Tab:CreateToggle({
+    Name = "Highlight Ammo",
+    CurrentValue = false,
+    Callback = function(value)
+        Highlights.Ammo = value
+        updateAllItems()
+    end
+})
+
+Tab:CreateToggle({
+    Name = "Highlight Armor",
+    CurrentValue = false,
+    Callback = function(value)
+        Highlights.Armor = value
+        updateAllItems()
+    end
+})
+
+Rayfield:LoadConfiguration()
