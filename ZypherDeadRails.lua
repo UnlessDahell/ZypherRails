@@ -220,9 +220,130 @@ local function GetClosestNPC()
             end
             if not part or not humanoid then continue end
 
-            if humanoid.Health <= 0 then
-                continue 
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Zypher Script Loader (.gg/aTNg2Dcw)",
+    Icon = 82284779245358,
+    LoadingTitle = "Wait until UI loads",
+    LoadingSubtitle = "By Sir.Zypher and Eyes Sight",
+    Theme = "Dark",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "Zypher",
+        FileName = "Zypher"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "aTNg2Dcw",
+        RememberJoins = true
+    },
+    KeySystem = false
+})
+
+Rayfield:Notify({
+    Title = "Zypher Notifying",
+    Content = "Join our community server! (https://discord.gg/p5ynKu5f)",
+    Duration = 25,
+    Image = 4483362458
+})
+
+local MainTab = Window:CreateTab("Main Tab", "home")
+MainTab:CreateSection("Alpha Release")
+
+MainTab:CreateButton({
+    Name = "Discord Link (Click to Copy)",
+    Callback = function()
+        setclipboard("https://discord.gg/aTNg2Dcw")
+    end
+})
+
+local AimTab = Window:CreateTab("Aimbot", "crosshair")
+AimTab:CreateSection("Aim Settings")
+
+local AimSettings = {
+    Enabled = false,
+    NPC_Aim_Enabled = true,
+    FOVSize = 100,
+    AimTorso = false,
+    AimThroughWalls = false,
+    AimHorses = false
+}
+
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Color = Color3.fromRGB(0, 139, 139)
+FOVCircle.Thickness = 2
+FOVCircle.NumSides = 60
+FOVCircle.Radius = AimSettings.FOVSize
+FOVCircle.Filled = false
+FOVCircle.Visible = false
+
+AimTab:CreateToggle({
+    Name = "Enable Aim FOV",
+    CurrentValue = AimSettings.Enabled,
+    Callback = function(Value)
+        AimSettings.Enabled = Value
+        FOVCircle.Visible = Value
+    end
+})
+
+AimTab:CreateSlider({
+    Name = "Custom FOV Size",
+    Range = {50, 500},
+    Increment = 10,
+    CurrentValue = AimSettings.FOVSize,
+    Callback = function(Value)
+        AimSettings.FOVSize = Value
+        FOVCircle.Radius = Value
+    end
+})
+
+AimTab:CreateToggle({
+    Name = "Aim NPC Torso",
+    CurrentValue = AimSettings.AimTorso,
+    Callback = function(Value)
+        AimSettings.AimTorso = Value
+    end
+})
+
+AimTab:CreateToggle({
+    Name = "Aim Through Walls",
+    CurrentValue = AimSettings.AimThroughWalls,
+    Callback = function(Value)
+        AimSettings.AimThroughWalls = Value
+    end
+})
+
+AimTab:CreateToggle({
+    Name = "Aim at Horses",
+    CurrentValue = AimSettings.AimHorses,
+    Callback = function(Value)
+        AimSettings.AimHorses = Value
+    end
+})
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.Q then
+        AimSettings.Enabled = not AimSettings.Enabled
+        FOVCircle.Visible = AimSettings.Enabled
+    end
+end)
+                                
+local function GetClosestNPC()
+    local closest, shortestDistance = nil, AimSettings.FOVSize
+    local Camera = game.Workspace.CurrentCamera
+    local LocalPlayer = game.Players.LocalPlayer
+
+    for _, npc in ipairs(workspace:GetDescendants()) do
+        if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and npc:FindFirstChild("HumanoidRootPart") then
+            if game.Players:GetPlayerFromCharacter(npc) then continue end
+            if not AimSettings.AimHorses and npc.Name:lower():find("horse") then continue end
+
+            local part = npc:FindFirstChild("Head")
+            if AimSettings.AimTorso then
+                part = npc:FindFirstChild("Torso") or npc:FindFirstChild("HumanoidRootPart")
             end
+            if not part then continue end
 
             local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
             local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)).Magnitude
@@ -251,9 +372,8 @@ game:GetService("RunService").RenderStepped:Connect(function()
     FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
 
     local target = GetClosestNPC()
-
     if target then
-        local part = target:FindFirstChild("Head") 
+        local part = target:FindFirstChild("Head")
         if AimSettings.AimTorso then
             part = target:FindFirstChild("Torso") or target:FindFirstChild("HumanoidRootPart")
         end
