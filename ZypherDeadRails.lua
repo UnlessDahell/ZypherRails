@@ -172,6 +172,8 @@ end)
 
 Rayfield:LoadConfiguration()
 
+local Tab = Window:CreateTab("Visual", "eye")
+
 local Highlights = {
     Guns = false,
     Ammo = false,
@@ -215,7 +217,7 @@ workspace.ChildAdded:Connect(function(obj)
     applyItemHighlight(obj)
 end)
 
-local VirsualTab = Window:CreateTab("Virsual", "eye")
+local VisualTab = Window:CreateTab("Visual", "eye")
 
 Tab:CreateToggle({
     Name = "Highlight Guns",
@@ -244,4 +246,58 @@ Tab:CreateToggle({
     end
 })
 
-Rayfield:LoadConfiguration()
+local function HighlightItems()
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj:IsA("Model") or obj:IsA("Part") then
+            if obj:FindFirstChild("Item") and not obj:FindFirstChild("Weapon") and not obj:FindFirstChild("Ammo") and not obj:FindFirstChild("Armor") then
+                if not highlightedItems[obj] then
+                    local highlight = Instance.new("Highlight")
+                    highlight.Parent = obj
+                    highlight.FillColor = highlightColor
+                    highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
+                    highlight.FillTransparency = 0.5
+                    highlight.OutlineTransparency = 0
+                    highlightedItems[obj] = highlight
+                end
+            end
+        end
+    end
+end
+
+local function RemoveHighlights()
+    for obj, highlight in pairs(highlightedItems) do
+        if highlight then
+            highlight:Destroy()
+        end
+    end
+    highlightedItems = {} 
+end
+
+local ToggleHighlight = VisualTab:CreateToggle({
+    Name = "Highlight Items",
+    CurrentValue = false,
+    Flag = "ItemHighlight",
+    Callback = function(Value)
+        itemHighlightEnabled = Value
+        if itemHighlightEnabled then
+            HighlightItems()
+        else
+            RemoveHighlights()
+        end
+    end
+})
+
+local ColorPicker = VisualTab:CreateColorPicker({
+    Name = "Highlight Color",
+    Color = highlightColor,
+    Flag = "HighlightColor",
+    Callback = function(Color)
+        highlightColor = Color 
+        if itemHighlightEnabled then
+            RemoveHighlights()
+            HighlightItems() 
+        end
+    end
+})
+
+Rayfield:LoadConfiguration() 
