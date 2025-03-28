@@ -329,60 +329,6 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     end
 end)
                                 
-local function GetClosestNPC()
-    local closest, shortestDistance = nil, AimSettings.FOVSize
-    local Camera = game.Workspace.CurrentCamera
-    local LocalPlayer = game.Players.LocalPlayer
-
-    for _, npc in ipairs(workspace:GetDescendants()) do
-        if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and npc:FindFirstChild("HumanoidRootPart") then
-            if game.Players:GetPlayerFromCharacter(npc) then continue end
-            if not AimSettings.AimHorses and npc.Name:lower():find("horse") then continue end
-
-            local part = npc:FindFirstChild("Head")
-            if AimSettings.AimTorso then
-                part = npc:FindFirstChild("Torso") or npc:FindFirstChild("HumanoidRootPart")
-            end
-            if not part then continue end
-
-            local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
-            local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)).Magnitude
-
-            if distance < shortestDistance and onScreen then
-                if not AimSettings.AimThroughWalls then
-                    local ray = Ray.new(Camera.CFrame.Position, (part.Position - Camera.CFrame.Position).unit * 1000)
-                    local hit = workspace:FindPartOnRayWithIgnoreList(ray, {LocalPlayer.Character})
-
-                    if hit and hit:IsDescendantOf(npc) then
-                        closest, shortestDistance = npc, distance
-                    end
-                else
-                    closest, shortestDistance = npc, distance
-                end
-            end
-        end
-    end
-    return closest
-end
-
-game:GetService("RunService").RenderStepped:Connect(function()
-    if not AimSettings.Enabled then return end
-
-    local Camera = game.Workspace.CurrentCamera
-    FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-
-    local target = GetClosestNPC()
-    if target then
-        local part = target:FindFirstChild("Head")
-        if AimSettings.AimTorso then
-            part = target:FindFirstChild("Torso") or target:FindFirstChild("HumanoidRootPart")
-        end
-        if part then
-            Camera.CFrame = CFrame.new(Camera.CFrame.Position, part.Position)
-        end
-    end
-end)
-
 Rayfield:LoadConfiguration()
 
 local VisualTab = Window:CreateTab("Visual", "eye")
