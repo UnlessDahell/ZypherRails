@@ -1,11 +1,11 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield', true))()
 
 local Window = Rayfield:CreateWindow({
     Name = "Zypher Script Loader (.gg/aTNg2Dcw)",
-    Icon = 82284779245358,
+    Icon = "rbxassetid://82284779245358", -- Corrected
     LoadingTitle = "Wait until UI load up",
     LoadingSubtitle = "by Sir.Zypher and Eyes Sight",
-    Theme = nil,
+    Theme = nil, 
 
     DisableRayfieldPrompts = false,
     DisableBuildWarnings = false,
@@ -18,21 +18,15 @@ local Window = Rayfield:CreateWindow({
 
     Discord = {
         Enabled = true,
-        Invite = "https://discord.gg/aTNg2Dcw",
+        Invite = "aTNg2Dcw", 
         RememberJoins = true
     },
 
-    KeySystem = false,
-    KeySettings = {
-        Title = "none",
-        Subtitle = "none",
-        Note = "none",
-        FileName = "ZTeam",
-        SaveKey = false,
-        GrabKeyFromSite = false,
-        Key = {"nil"},
-    }
+    KeySystem = false
 })
+
+task.wait(1)
+Rayfield:LoadConfiguration()
 
 local MainTab = Window:CreateTab("Main Tab", "home")
 local Section = MainTab:CreateSection("MainTab Yeah this is Alpha release")
