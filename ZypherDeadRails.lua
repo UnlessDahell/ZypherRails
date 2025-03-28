@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield', true))(
 
 local Window = Rayfield:CreateWindow({
     Name = "Zypher Script Loader (.gg/aTNg2Dcw)",
-    Icon = "rbxassetid://82284779245358", -- Corrected
+    Icon = "rbxassetid://82284779245358", 
     LoadingTitle = "Wait until UI load up",
     LoadingSubtitle = "by Sir.Zypher and Eyes Sight",
     Theme = nil, 
