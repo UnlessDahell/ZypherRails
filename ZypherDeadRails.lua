@@ -35,6 +35,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 local MainTab = Window:CreateTab("Main Tab", "home")
+local Section = MainTab:CreateSection("MainTab Yeah this is Alpha release")
 
 Rayfield:Notify({
     Title = "Zypher Notifying",
@@ -53,6 +54,7 @@ local Button4 = MainTab:CreateButton({
 })
 
 local AimTab = Window:CreateTab("Aimbot", "crosshair")
+local Section = AimTab:CreateSection("This Tab about Aim more function will be added soon")
 
 local AimSettings = {
     Enabled = false,
@@ -172,7 +174,8 @@ end)
 
 Rayfield:LoadConfiguration()
 
-local Tab = Window:CreateTab("Visual", "eye")
+local VisualTab = Window:CreateTab("Visual", "eye")
+local Section = VisualTab:CreateSection("Due the down time of pastebin.com and 80% of process is save in pastebin.com here is Alpha version then")
 
 local Highlights = {
     Guns = false,
