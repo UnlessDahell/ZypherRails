@@ -317,7 +317,7 @@ workspace.ChildAdded:Connect(function(obj)
     applyItemHighlight(obj)
 end)
 
-Tab:CreateToggle({
+VisualTab:CreateToggle({
     Name = "Highlight Guns",
     CurrentValue = false,
     Callback = function(value)
@@ -326,7 +326,7 @@ Tab:CreateToggle({
     end
 })
 
-Tab:CreateToggle({
+VisualTab:CreateToggle({
     Name = "Highlight Ammo",
     CurrentValue = false,
     Callback = function(value)
@@ -335,7 +335,7 @@ Tab:CreateToggle({
     end
 })
 
-Tab:CreateToggle({
+VisualTab:CreateToggle({
     Name = "Highlight Armor",
     CurrentValue = false,
     Callback = function(value)
