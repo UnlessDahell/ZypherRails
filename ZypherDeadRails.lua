@@ -220,8 +220,6 @@ workspace.ChildAdded:Connect(function(obj)
     applyItemHighlight(obj)
 end)
 
-local VisualTab = Window:CreateTab("Visual", "eye")
-
 Tab:CreateToggle({
     Name = "Highlight Guns",
     CurrentValue = false,
