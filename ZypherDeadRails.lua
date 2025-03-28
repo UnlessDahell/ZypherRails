@@ -5,7 +5,7 @@ local Window = Rayfield:CreateWindow({
     Icon = 82284779245358,
     LoadingTitle = "Wait until UI load up",
     LoadingSubtitle = "by Sir.Zypher and Eyes Sight",
-    Theme = "nil",
+    Theme = nil,
 
     DisableRayfieldPrompts = false,
     DisableBuildWarnings = false,
