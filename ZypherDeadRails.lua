@@ -11,13 +11,13 @@ local Window = Rayfield:CreateWindow({
     DisableBuildWarnings = false,
 
     ConfigurationSaving = {
-        Enabled = false,
+        Enabled = true,
         FolderName = "Zypher",
         FileName = "Zypher"
     },
 
     Discord = {
-        Enabled = false,
+        Enabled = true,
         Invite = "https://discord.gg/aTNg2Dcw",
         RememberJoins = true
     },
@@ -169,6 +169,8 @@ game:GetService("RunService").RenderStepped:Connect(function()
         end
     end
 end)
+
+Rayfield:LoadConfiguration()
 
 local Highlights = {
     Guns = false,
