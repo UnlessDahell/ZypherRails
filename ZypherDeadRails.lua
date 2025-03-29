@@ -28,3 +28,10 @@ local Window = Luna:CreateWindow({
 		}
 	}
 })
+
+local MainTab = Window:CreateTab({
+	Name = "MainTab",
+	Icon = "home",
+	ImageSource = "Material",
+	ShowTitle = true 
+})
