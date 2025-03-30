@@ -35,5 +35,5 @@ local Tab = Window:CreateTab({
 	ImageSource = "Material",
 	ShowTitle = true 
 })
+
 MainTab:CreateSection("This is MainTab")
-MainTab:CreateDivider()
