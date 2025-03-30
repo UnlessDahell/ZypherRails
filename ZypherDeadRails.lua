@@ -29,9 +29,11 @@ local Window = Luna:CreateWindow({
 	}
 })
 
-local MainTab = Window:CreateTab({
+local Tab = Window:CreateTab({
 	Name = "MainTab",
-	Icon = "home",
+	Icon = "house",
 	ImageSource = "Material",
 	ShowTitle = true 
 })
+MainTab:CreateSection("This is MainTab")
+MainTab:CreateDivider()
