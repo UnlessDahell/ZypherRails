@@ -35,5 +35,14 @@ local Tab = Window:CreateTab({
 	ImageSource = "Material",
 	ShowTitle = true 
 })
-
 MainTab:CreateSection("This is MainTab")
+
+MainTab:CreateSection("Community Server")
+
+local Button = Tab:CreateButton({
+	Name = "Discord Link",
+	Description = "You click the button :D", 
+    	Callback = function()
+         setclipboard("https://discord.gg/ere8H6q9")
+    	end
+})
