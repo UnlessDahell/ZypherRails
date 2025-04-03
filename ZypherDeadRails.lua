@@ -26,8 +26,6 @@ local Button = MainTab:CreateButton({
    setclipboard("https://discord.gg/ere8H6q9") 
    end,
 })
-	
-local AimTab = Window:CreateTab("Aimbot", "crosshair")
 
 local AimSettings = {
     Enabled = false,
@@ -45,6 +43,8 @@ FOVCircle.Radius = AimSettings.FOVSize
 FOVCircle.Filled = false
 FOVCircle.Visible = false
 FOVCircle.Position = Vector2.new()
+
+local AimTab = Window:CreateTab("Aimbot", "crosshair")
 
 AimTab:CreateToggle({
     Name = "Enable Aim",
@@ -138,8 +138,6 @@ game:GetService("RunService").RenderStepped:Connect(function()
         end
     end
 end)
-
-local VisualTab = Window:CreateTab("Visual Tab", "eye")
 
 local outlineSettings = {
     npcColor = Color3.fromRGB(255, 50, 50),
@@ -319,6 +317,7 @@ local function updateOutlines()
     end
 end
 
+local VisualTab = Window:CreateTab("Visual Tab", "eye")
 local ToggleSection = VisualTab:CreateSection("Outline Toggles")
 VisualTab:CreateLabel("All Outlines Still In Dev And Unoptimized So Yeah")
 
