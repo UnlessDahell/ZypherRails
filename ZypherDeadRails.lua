@@ -555,4 +555,4 @@ local NoClipToggle = NoClipTab:CreateToggle({
     end
 })
 
-Tab:CreateLabel("Press 'F' to toggle NoClip (when button is visible)")
+NoClipTab:CreateLabel("Press 'F' to toggle NoClip (when button is visible)")
