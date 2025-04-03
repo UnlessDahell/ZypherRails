@@ -121,8 +121,6 @@ local function GetClosestNPC()
     return closest
 end
 
-Rayfield:LoadConfiguration()
-
 game:GetService("RunService").RenderStepped:Connect(function()
     if not AimSettings.Enabled then return end
 
@@ -140,8 +138,6 @@ game:GetService("RunService").RenderStepped:Connect(function()
         end
     end
 end)
-
-
 
 local VisualTab = Window:CreateTab("Visual Tab", "eye")
 
@@ -251,7 +247,7 @@ local function applyOutline(instance)
     
     local outline = createOutline()
     
-    if instance:FindFirstChild("CorpseTag") then
+    if instance:FindFirstChild("Corpse") then
         outline.OutlineColor = outlineSettings.corpseColor
     elseif hasOreInParent(instance) then
         outline.OutlineColor = outlineSettings.oreColor
@@ -421,9 +417,6 @@ task.defer(function()
     })
 end)
 
-Rayfield:LoadConfiguration()
-task.wait(1)
-
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
 local running = false
@@ -528,7 +521,7 @@ player.CharacterAdded:Connect(function(newChar)
     end
 end)
 
-local NoClipTab = Window:CreateTab("NoClip", 4483362458)
+local NoClipTab = Window:CreateTab("NoClip", "annoyed")
 
 local ButtonToggle = NoClipTab:CreateToggle({
     Name = "Show NoClip Button",
@@ -564,5 +557,3 @@ local NoClipToggle = Tab:CreateToggle({
 })
 
 Tab:CreateLabel("Press 'F' to toggle NoClip (when button is visible)")
-
-Rayfield:LoadConfiguration()
