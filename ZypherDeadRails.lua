@@ -321,7 +321,7 @@ local VisualTab = Window:CreateTab("Visual Tab", "eye")
 local ToggleSection = VisualTab:CreateSection("Outline Toggles")
 VisualTab:CreateLabel("All Outlines Still In Dev And Unoptimized So Yeah")
 
-local NPCsToggle = MainTab:CreateToggle({
+local NPCsToggle = VisualTab:CreateToggle({
     Name = "NPC Outlines",
     CurrentValue = outlineSettings.npcEnabled,
     Flag = "NPCsToggle",
