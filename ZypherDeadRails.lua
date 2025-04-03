@@ -1,10 +1,10 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Rayfield Example Window",
+   Name = "ZypherHub (Dead Rails Ver.Bug-Beta-1)",
    Icon = 0, 
-   LoadingTitle = "Rayfield Interface Suite",
-   LoadingSubtitle = "by Sirius",
+   LoadingTitle = "This is Beta Test Expected For Bug And Unfunctional Options",
+   LoadingSubtitle = "by !RENDER , VoxLar, Zypher",
    Theme = "Default", 
 
    DisableRayfieldPrompts = false,
@@ -12,8 +12,8 @@ local Window = Rayfield:CreateWindow({
 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = "DeadRailsZ", 
-      FileName = "Big Hub"
+      FolderName = "ZypherHubFile", 
+      FileName = "DeadRailsZ"
    },
 })
 
