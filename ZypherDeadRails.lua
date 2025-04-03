@@ -20,7 +20,7 @@ local Window = Rayfield:CreateWindow({
 local MainTab = Window:CreateTab("Main Tab", "home")
 MainTab:CreateLabel("This is Test version and have a lot of things to fix so join our discord for new or update")
 
-local Button = Tab:CreateButton({
+local Button = MainTab:CreateButton({
    Name = "Get Discord Link Here",
    Callback = function()
    setclipboard("https://discord.gg/ere8H6q9") 
