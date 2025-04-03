@@ -531,7 +531,7 @@ local ButtonToggle = NoClipTab:CreateToggle({
     end
 })
 
-local MovableToggle = Tab:CreateToggle({
+local MovableToggle = NoClipTab:CreateToggle({
     Name = "Make Button Movable",
     CurrentValue = buttonMovable,
     Callback = function(value)
@@ -540,7 +540,7 @@ local MovableToggle = Tab:CreateToggle({
     end
 })
 
-local NoClipToggle = Tab:CreateToggle({
+local NoClipToggle = NoClipTab:CreateToggle({
     Name = "Enable NoClip",
     CurrentValue = running,
     Callback = function(value)
