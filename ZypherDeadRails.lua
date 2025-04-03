@@ -18,7 +18,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 local MainTab = Window:CreateTab("Main Tab", "home")
-MainTab: CreateLabel("This is Test version and have a lot of things to fix so join our discord for new or update
+MainTab:CreateLabel("This is Test version and have a lot of things to fix so join our discord for new or update
 
 local Button = Tab:CreateButton({
    Name = "Get Discord Link Here",
@@ -140,6 +140,8 @@ game:GetService("RunService").RenderStepped:Connect(function()
         end
     end
 end)
+
+
 
 local VisualTab = Window:CreateTab("Visual Tab", "eye")
 
@@ -420,6 +422,7 @@ task.defer(function()
 end)
 
 Rayfield:LoadConfiguration()
+task.wait(1)
 
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
