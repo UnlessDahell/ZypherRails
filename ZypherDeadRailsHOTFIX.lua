@@ -177,9 +177,7 @@ local function ToggleNoClip()
 end
 
 -- Create Tabs
-local AimTab = Window:CreateTab("Aimbot", 4483362458) -- Crosshair icon
-local VisualTab = Window:CreateTab("Visuals", 4483345998) -- Eye icon
-local NoClipTab = Window:CreateTab("NoClip", 4483346260) -- Ghost icon
+local AimTab = Window:CreateTab("Aimbot", crosshair) -- Crosshair icon
 
 -- Aimbot Tab
 AimTab:CreateToggle({
@@ -237,7 +235,8 @@ AimTab:CreateKeybind({
     end
 })
 
--- Visuals Tab
+local VisualTab = Window:CreateTab("Visuals", "eye") 
+
 VisualTab:CreateToggle({
     Name = "NPC Outlines",
     CurrentValue = OutlineSettings.NPCs,
@@ -289,7 +288,8 @@ VisualTab:CreateSlider({
     end
 })
 
--- NoClip Tab
+local NoClipTab = Window:CreateTab("NoClip", "ghost")
+
 NoClipTab:CreateToggle({
     Name = "Enable NoClip",
     CurrentValue = NoClipSettings.Enabled,
