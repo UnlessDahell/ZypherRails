@@ -1,22 +1,27 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "ZypherHub (Dead Rails Ver.Bug-Beta-1)",
-   Icon = 0, 
-   LoadingTitle = "This is Beta Test Expected For Bug And Unfunctional Options",
-   LoadingSubtitle = "by !RENDER , VoxLar, Zypher",
-   Theme = "Default", 
-
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, 
-
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "ZypherHubFile", 
-      FileName = "DeadRailsZ"
-   },
+    Name = "ZypherHub | Dead Rails",
+    LoadingTitle = "Loading ZypherHub...",
+    LoadingSubtitle = "by !RENDER, VoxLar, Zypher",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "ZypherHub_DeadRails",
+        FileName = "Config"
+    },
+    KeySystem = false,
+    KeySettings = {
+        Title = "Untitled",
+        Subtitle = "Key System",
+        Note = "No method of obtaining the key is provided",
+        FileName = "Key",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {"Hello"}
+    }
 })
 
+-- Aimbot System
 local AimSettings = {
     Enabled = false,
     FOV = 100,
@@ -34,11 +39,11 @@ FOVCircle.Radius = AimSettings.FOV
 FOVCircle.Filled = false
 
 local function IsNPC(model)
-    return model:FindFirstChild("Humanoid") and not game.Players:GetPlayerFromCharacter(model)
+    return model and model:FindFirstChild("Humanoid") and not game.Players:GetPlayerFromCharacter(model)
 end
 
 local function IsHorse(model)
-    return model.Name:lower():find("horse") or model:FindFirstChild("HorseTag")
+    return model and (model.Name:lower():find("horse") or model:FindFirstChild("HorseTag"))
 end
 
 local function IsVisible(targetPart)
@@ -76,25 +81,7 @@ local function GetClosestNPC()
     return closest
 end
 
-game:GetService("RunService").RenderStepped:Connect(function()
-    FOVCircle.Visible = AimSettings.Enabled
-    FOVCircle.Radius = AimSettings.FOV
-    FOVCircle.Position = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
-
-    if AimSettings.Enabled then
-        local target = GetClosestNPC()
-        if target then
-            workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, target.Position)
-        end
-    end
-end)
-
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-    if input.KeyCode == AimSettings.Hotkey and not gameProcessed then
-        AimSettings.Enabled = not AimSettings.Enabled
-    end
-end)
-
+-- Visual Outlines
 local OutlineSettings = {
     NPCs = false,
     Corpses = false,
@@ -107,6 +94,7 @@ local OutlineSettings = {
 local Highlights = {}
 
 local function CreateHighlight(instance, color)
+    if not instance or not instance.Parent then return end
     local highlight = Instance.new("Highlight")
     highlight.FillTransparency = 1
     highlight.OutlineColor = color
@@ -122,6 +110,8 @@ local function RemoveHighlight(instance)
 end
 
 local function ShouldHighlight(instance)
+    if not instance then return nil end
+    
     if instance:IsA("Model") then
         if OutlineSettings.NPCs and IsNPC(instance) and not IsHorse(instance) then
             return Color3.fromRGB(255, 50, 50)
@@ -133,7 +123,7 @@ local function ShouldHighlight(instance)
             return Color3.fromRGB(255, 165, 0)
         elseif OutlineSettings.Tools and instance:IsA("Tool") then
             return Color3.fromRGB(0, 150, 255)
-        elseif OutlineSettings.Items and (instance.Name:lower():find("item") or instance.Parent.Name:lower():find("item")) then
+        elseif OutlineSettings.Items and (instance.Name:lower():find("item") or (instance.Parent and instance.Parent.Name:lower():find("item"))) then
             return Color3.fromRGB(150, 0, 255)
         end
     end
@@ -159,18 +149,7 @@ local function UpdateOutlines()
     end
 end
 
-task.spawn(function()
-    while task.wait(OutlineSettings.ScanInterval) do
-        if OutlineSettings.NPCs or OutlineSettings.Corpses or OutlineSettings.Ores or OutlineSettings.Tools or OutlineSettings.Items then
-            UpdateOutlines()
-        else
-            for instance, _ in pairs(Highlights) do
-                RemoveHighlight(instance)
-            end
-        end
-    end
-end)
-
+-- NoClip System
 local NoClipSettings = {
     Enabled = false,
     Hotkey = Enum.KeyCode.F,
@@ -185,7 +164,11 @@ NoClipButton.Position = UDim2.new(0.85, 0, 0.8, 0)
 NoClipButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 NoClipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 NoClipButton.Text = "NoClip: OFF"
-NoClipButton.Parent = game.CoreGui:FindFirstChild("Rayfield") or Instance.new("ScreenGui")
+NoClipButton.Font = Enum.Font.GothamBold
+NoClipButton.TextSize = 14
+NoClipButton.BorderSizePixel = 0
+NoClipButton.AutoButtonColor = true
+NoClipButton.Parent = game:GetService("CoreGui"):FindFirstChild("Rayfield") or Instance.new("ScreenGui")
 
 local function ToggleNoClip()
     NoClipSettings.Enabled = not NoClipSettings.Enabled
@@ -193,7 +176,168 @@ local function ToggleNoClip()
     NoClipButton.BackgroundColor3 = NoClipSettings.Enabled and Color3.fromRGB(0, 100, 0) or Color3.fromRGB(30, 30, 30)
 end
 
-NoClipButton.MouseButton1Click:Connect(ToggleNoClip)
+-- Create Tabs
+local AimTab = Window:CreateTab("Aimbot", 4483362458) -- Crosshair icon
+local VisualTab = Window:CreateTab("Visuals", 4483345998) -- Eye icon
+local NoClipTab = Window:CreateTab("NoClip", 4483346260) -- Ghost icon
+
+-- Aimbot Tab
+AimTab:CreateToggle({
+    Name = "Enable Aimbot",
+    CurrentValue = AimSettings.Enabled,
+    Callback = function(Value)
+        AimSettings.Enabled = Value
+    end
+})
+
+AimTab:CreateSlider({
+    Name = "FOV Size",
+    Range = {30, 300},
+    Increment = 10,
+    Suffix = " studs",
+    CurrentValue = AimSettings.FOV,
+    Callback = function(Value)
+        AimSettings.FOV = Value
+        FOVCircle.Radius = Value
+    end
+})
+
+AimTab:CreateDropdown({
+    Name = "Aim Part",
+    Options = {"Head", "Torso"},
+    CurrentOption = AimSettings.AimPart,
+    Callback = function(Option)
+        AimSettings.AimPart = Option
+    end
+})
+
+AimTab:CreateToggle({
+    Name = "Ignore Horses",
+    CurrentValue = AimSettings.IgnoreHorses,
+    Callback = function(Value)
+        AimSettings.IgnoreHorses = Value
+    end
+})
+
+AimTab:CreateToggle({
+    Name = "Wall Check",
+    CurrentValue = AimSettings.WallCheck,
+    Callback = function(Value)
+        AimSettings.WallCheck = Value
+    end
+})
+
+AimTab:CreateKeybind({
+    Name = "Aimbot Hotkey",
+    CurrentKeybind = AimSettings.Hotkey,
+    HoldToInteract = false,
+    Flag = "AimbotHotkey",
+    Callback = function(Key)
+        AimSettings.Hotkey = Key
+    end
+})
+
+-- Visuals Tab
+VisualTab:CreateToggle({
+    Name = "NPC Outlines",
+    CurrentValue = OutlineSettings.NPCs,
+    Callback = function(Value)
+        OutlineSettings.NPCs = Value
+    end
+})
+
+VisualTab:CreateToggle({
+    Name = "Corpse Outlines",
+    CurrentValue = OutlineSettings.Corpses,
+    Callback = function(Value)
+        OutlineSettings.Corpses = Value
+    end
+})
+
+VisualTab:CreateToggle({
+    Name = "Ore Outlines",
+    CurrentValue = OutlineSettings.Ores,
+    Callback = function(Value)
+        OutlineSettings.Ores = Value
+    end
+})
+
+VisualTab:CreateToggle({
+    Name = "Tool Outlines",
+    CurrentValue = OutlineSettings.Tools,
+    Callback = function(Value)
+        OutlineSettings.Tools = Value
+    end
+})
+
+VisualTab:CreateToggle({
+    Name = "Item Outlines",
+    CurrentValue = OutlineSettings.Items,
+    Callback = function(Value)
+        OutlineSettings.Items = Value
+    end
+})
+
+VisualTab:CreateSlider({
+    Name = "Scan Interval",
+    Range = {0.1, 5},
+    Increment = 0.1,
+    Suffix = "s",
+    CurrentValue = OutlineSettings.ScanInterval,
+    Callback = function(Value)
+        OutlineSettings.ScanInterval = Value
+    end
+})
+
+-- NoClip Tab
+NoClipTab:CreateToggle({
+    Name = "Enable NoClip",
+    CurrentValue = NoClipSettings.Enabled,
+    Callback = function(Value)
+        ToggleNoClip()
+    end
+})
+
+NoClipTab:CreateToggle({
+    Name = "Show Button",
+    CurrentValue = NoClipSettings.ButtonVisible,
+    Callback = function(Value)
+        NoClipSettings.ButtonVisible = Value
+        NoClipButton.Visible = Value
+    end
+})
+
+NoClipTab:CreateToggle({
+    Name = "Movable Button",
+    CurrentValue = NoClipSettings.ButtonMovable,
+    Callback = function(Value)
+        NoClipSettings.ButtonMovable = Value
+        NoClipButton.Draggable = Value
+    end
+})
+
+NoClipTab:CreateKeybind({
+    Name = "NoClip Hotkey",
+    CurrentKeybind = NoClipSettings.Hotkey,
+    HoldToInteract = false,
+    Flag = "NoClipHotkey",
+    Callback = function(Key)
+        NoClipSettings.Hotkey = Key
+    end
+})
+
+-- Runtime Connections
+game:GetService("RunService").RenderStepped:Connect(function()
+    FOVCircle.Visible = AimSettings.Enabled
+    FOVCircle.Position = Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2)
+
+    if AimSettings.Enabled then
+        local target = GetClosestNPC()
+        if target then
+            workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, target.Position)
+        end
+    end
+end)
 
 game:GetService("RunService").Stepped:Connect(function()
     if NoClipSettings.Enabled and game.Players.LocalPlayer.Character then
@@ -206,35 +350,38 @@ game:GetService("RunService").Stepped:Connect(function()
 end)
 
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-    if input.KeyCode == NoClipSettings.Hotkey and not gameProcessed then
-        ToggleNoClip()
+    if not gameProcessed then
+        if input.KeyCode == AimSettings.Hotkey then
+            AimSettings.Enabled = not AimSettings.Enabled
+        elseif input.KeyCode == NoClipSettings.Hotkey then
+            ToggleNoClip()
+        end
     end
 end)
 
-local AimTab = Window:CreateTab("Aimbot", "crosshair")
-AimTab:CreateToggle({ Name = "Enable Aimbot", CurrentValue = AimSettings.Enabled, Callback = function(v) AimSettings.Enabled = v end })
-AimTab:CreateSlider({ Name = "FOV Size", Range = {30, 300}, CurrentValue = AimSettings.FOV, Callback = function(v) AimSettings.FOV = v end })
-AimTab:CreateDropdown({ Name = "Aim Part", Options = {"Head", "Torso"}, CurrentOption = AimSettings.AimPart, Callback = function(v) AimSettings.AimPart = v end })
-AimTab:CreateToggle({ Name = "Ignore Horses", CurrentValue = AimSettings.IgnoreHorses, Callback = function(v) AimSettings.IgnoreHorses = v end })
-AimTab:CreateToggle({ Name = "Wall Check", CurrentValue = AimSettings.WallCheck, Callback = function(v) AimSettings.WallCheck = v end })
-AimTab:CreateKeybind({ Name = "Aimbot Hotkey", CurrentKeybind = AimSettings.Hotkey, Callback = function(k) AimSettings.Hotkey = k end })
-
-local VisionTab = Window:CreateTab("Visuals", "eye")
-VisionTab:CreateToggle({ Name = "NPC Outlines", CurrentValue = OutlineSettings.NPCs, Callback = function(v) OutlineSettings.NPCs = v end })
-VisionTab:CreateToggle({ Name = "Corpse Outlines", CurrentValue = OutlineSettings.Corpses, Callback = function(v) OutlineSettings.Corpses = v end })
-VisionTab:CreateToggle({ Name = "Ore Outlines", CurrentValue = OutlineSettings.Ores, Callback = function(v) OutlineSettings.Ores = v end })
-VisionTab:CreateToggle({ Name = "Tool Outlines", CurrentValue = OutlineSettings.Tools, Callback = function(v) OutlineSettings.Tools = v end })
-VisionTab:CreateToggle({ Name = "Item Outlines", CurrentValue = OutlineSettings.Items, Callback = function(v) OutlineSettings.Items = v end })
-VisionTab:CreateSlider({ Name = "Scan Interval", Range = {0.1, 5}, CurrentValue = OutlineSettings.ScanInterval, Callback = function(v) OutlineSettings.ScanInterval = v end })
-
-local NoClipTab = Window:CreateTab("NoClip", "ghost")
-NoClipTab:CreateToggle({ Name = "Enable NoClip", CurrentValue = NoClipSettings.Enabled, Callback = function(v) ToggleNoClip() end })
-NoClipTab:CreateToggle({ Name = "Show Button", CurrentValue = NoClipSettings.ButtonVisible, Callback = function(v) NoClipButton.Visible = v end })
-NoClipTab:CreateToggle({ Name = "Movable Button", CurrentValue = NoClipSettings.ButtonMovable, Callback = function(v) NoClipButton.Draggable = v end })
-NoClipTab:CreateKeybind({ Name = "NoClip Hotkey", CurrentKeybind = NoClipSettings.Hotkey, Callback = function(k) NoClipSettings.Hotkey = k end })
+task.spawn(function()
+    while task.wait(OutlineSettings.ScanInterval) do
+        if OutlineSettings.NPCs or OutlineSettings.Corpses or OutlineSettings.Ores or OutlineSettings.Tools or OutlineSettings.Items then
+            UpdateOutlines()
+        else
+            for instance, _ in pairs(Highlights) do
+                RemoveHighlight(instance)
+            end
+        end
+    end
+end)
 
 Rayfield:Notify({
-    Title = "Script Loaded",
-    Content = "Dead Rails optimized script activated!",
-    Duration = 5
+    Title = "ZypherHub Loaded",
+    Content = "Dead Rails features activated!",
+    Duration = 6.5,
+    Image = nil,
+    Actions = {
+        Ignore = {
+            Name = "Okay",
+            Callback = function()
+                print("User acknowledged notification")
+            end
+        },
+    },
 })
