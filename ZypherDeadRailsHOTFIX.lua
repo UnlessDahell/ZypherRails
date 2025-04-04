@@ -1,20 +1,26 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "ZypherHub | Dead Rails",
-    LoadingTitle = "Optimized for Dead Rails",
-    LoadingSubtitle = "by !RENDER, VoxLar, Zypher",
-    ConfigurationSaving = {
-        Enabled = true,
-        FolderName = "ZypherHub_DeadRails",
-        FileName = "Config"
-    }
+   Name = "ZypherHub (Dead Rails Ver.Bug-Beta-1)",
+   Icon = 0, 
+   LoadingTitle = "This is Beta Test Expected For Bug And Unfunctional Options",
+   LoadingSubtitle = "by !RENDER , VoxLar, Zypher",
+   Theme = "Default", 
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, 
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "ZypherHubFile", 
+      FileName = "DeadRailsZ"
+   },
 })
 
 local AimSettings = {
     Enabled = false,
     FOV = 100,
-    AimPart = "Head", 
+    AimPart = "Head",
     IgnoreHorses = true,
     WallCheck = true,
     Hotkey = Enum.KeyCode.Q
@@ -26,7 +32,6 @@ FOVCircle.Color = Color3.fromRGB(0, 255, 255)
 FOVCircle.Thickness = 1
 FOVCircle.Radius = AimSettings.FOV
 FOVCircle.Filled = false
-FOVCircle.Position = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
 
 local function IsNPC(model)
     return model:FindFirstChild("Humanoid") and not game.Players:GetPlayerFromCharacter(model)
@@ -229,7 +234,7 @@ NoClipTab:CreateToggle({ Name = "Movable Button", CurrentValue = NoClipSettings.
 NoClipTab:CreateKeybind({ Name = "NoClip Hotkey", CurrentKeybind = NoClipSettings.Hotkey, Callback = function(k) NoClipSettings.Hotkey = k end })
 
 Rayfield:Notify({
-    Title = "Script Executed",
-    Content = "Dead Rails script executed!",
+    Title = "Script Loaded",
+    Content = "Dead Rails optimized script activated!",
     Duration = 5
 })
