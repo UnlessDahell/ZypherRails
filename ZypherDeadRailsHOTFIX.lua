@@ -177,7 +177,7 @@ local function ToggleNoClip()
 end
 
 -- Create Tabs
-local AimTab = Window:CreateTab("Aimbot", crosshair) -- Crosshair icon
+local AimTab = Window:CreateTab("Aimbot", "crosshair") -- Crosshair icon
 
 -- Aimbot Tab
 AimTab:CreateToggle({
