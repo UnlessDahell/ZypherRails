@@ -27,12 +27,14 @@ local Button = MainTab:CreateButton({
    end,
 })
 
+-- Aimbot Section
 local AimSettings = {
     Enabled = false,
     NPC_Aim_Enabled = true,
     FOVSize = 100,
     AimTorso = false,
-    NotAimHorse = false,
+    NotAimHorse = true,
+    WallCheck = true
 }
 
 local FOVCircle = Drawing.new("Circle")
@@ -75,10 +77,18 @@ AimTab:CreateToggle({
 })
 
 AimTab:CreateToggle({
-    Name = "Not Aim Horse",
+    Name = "Ignore Horse/Unicorn",
     CurrentValue = AimSettings.NotAimHorse,
     Callback = function(Value)
         AimSettings.NotAimHorse = Value
+    end
+})
+
+AimTab:CreateToggle({
+    Name = "Wall Check",
+    CurrentValue = AimSettings.WallCheck,
+    Callback = function(Value)
+        AimSettings.WallCheck = Value
     end
 })
 
@@ -89,6 +99,28 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     end
 end)
 
+local function isHorseOrUnicorn(npc)
+    if not npc then return false end
+    return npc:FindFirstChild("Horse") or npc:FindFirstChild("Unicorn") or npc.Name:lower():find("horse") or npc.Name:lower():find("unicorn")
+end
+
+local function canSeeTarget(targetPart, camera)
+    if not AimSettings.WallCheck then return true end
+    
+    local origin = camera.CFrame.Position
+    local direction = (targetPart.Position - origin).Unit * 1000
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {game.Players.LocalPlayer.Character}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    
+    local raycastResult = workspace:Raycast(origin, direction, raycastParams)
+    if raycastResult then
+        local hitPart = raycastResult.Instance
+        return hitPart:IsDescendantOf(targetPart.Parent)
+    end
+    return true
+end
+
 local function GetClosestNPC()
     local closest, shortestDistance = nil, AimSettings.FOVSize
     local Camera = game.Workspace.CurrentCamera
@@ -96,7 +128,7 @@ local function GetClosestNPC()
 
     for _, npc in ipairs(workspace:GetDescendants()) do
         if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and npc:FindFirstChild("HumanoidRootPart") and AimSettings.NPC_Aim_Enabled then
-            if AimSettings.NotAimHorse and npc:FindFirstChild("Horse") then
+            if AimSettings.NotAimHorse and isHorseOrUnicorn(npc) then
                 continue
             end
             if game.Players:GetPlayerFromCharacter(npc) then
@@ -113,7 +145,7 @@ local function GetClosestNPC()
             local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
             local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)).Magnitude
 
-            if distance < shortestDistance and onScreen then
+            if distance < shortestDistance and onScreen and canSeeTarget(part, Camera) then
                 closest, shortestDistance = npc, distance
             end
         end
@@ -139,283 +171,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     end
 end)
 
-local outlineSettings = {
-    npcColor = Color3.fromRGB(255, 50, 50),
-    horseColor = Color3.fromRGB(50, 255, 50),
-    corpseColor = Color3.fromRGB(0, 200, 0),
-    oreColor = Color3.fromRGB(255, 165, 0),
-    toolColor = Color3.fromRGB(0, 150, 255),
-    itemColor = Color3.fromRGB(150, 0, 255),
-    
-    npcEnabled = false,
-    corpseEnabled = false,
-    oreEnabled = false,
-    toolEnabled = false,
-    itemEnabled = false,
-    
-    scanInterval = 1
-}
-
-local outlines = {}
-local scanActive = false
-
-local function createOutline()
-    local outline = Instance.new("Highlight")
-    outline.FillTransparency = 1
-    outline.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-    return outline
-end
-
-local function isPlayer(character)
-    task.wait(0.1)
-    return character and game.Players:GetPlayerFromCharacter(character) ~= nil
-end
-
-local function isHorse(npc)
-    task.wait(0.1)
-    if not npc then return false end
-    return npc.Name:lower():find("horse") ~= nil
-        or (npc:FindFirstChild("HorseTag") ~= nil)
-end
-
-local function hasOreInParent(instance)
-    task.wait(0.1)
-    local current = instance
-    while current do
-        if current.Name:lower():find("ore") then
-            return true
-        end
-        current = current.Parent
-    end
-    return false
-end
-
-local function isTool(instance)
-    task.wait(0.1)
-    return instance:IsA("Tool") or instance:FindFirstChildWhichIsA("Tool")
-end
-
-local function isDeadRailsItem(instance)
-    task.wait(0.1)
-    if not instance then return false end
-    if instance:FindFirstAncestorOfClass("Backpack") then return false end
-    
-    local name = instance.Name:lower()
-    return name:find("item") 
-        or name:find("loot")
-        or name:find("supply")
-        or name:find("resource")
-        or instance:FindFirstChild("CanPickUp")
-        or instance:FindFirstChild("Draggable")
-end
-
-local function shouldOutline(instance)
-    task.wait(0.1)
-    if not instance or not instance.Parent then return false end
-    if instance:IsA("Terrain") or instance:IsA("Camera") then return false end
-    
-    if outlineSettings.npcEnabled 
-       and instance:FindFirstChildWhichIsA("Humanoid") 
-       and not isPlayer(instance) then
-        return not isCorpse(instance)
-    end
-    
-    if outlineSettings.corpseEnabled and instance:FindFirstChild("CorpseTag") then
-        return true
-    end
-    
-    if outlineSettings.oreEnabled and hasOreInParent(instance) then
-        return true
-    end
-    
-    if outlineSettings.toolEnabled and isTool(instance) then
-        return true
-    end
-    
-    if outlineSettings.itemEnabled and isDeadRailsItem(instance) then
-        return true
-    end
-    
-    return false
-end
-
-local function applyOutline(instance)
-    task.wait(0.1)
-    if not shouldOutline(instance) or outlines[instance] then return end
-    
-    local outline = createOutline()
-    
-    if instance:FindFirstChild("Corpse") then
-        outline.OutlineColor = outlineSettings.corpseColor
-    elseif hasOreInParent(instance) then
-        outline.OutlineColor = outlineSettings.oreColor
-    elseif isTool(instance) then
-        outline.OutlineColor = outlineSettings.toolColor
-    elseif isDeadRailsItem(instance) then
-        outline.OutlineColor = outlineSettings.itemColor
-    elseif instance:FindFirstChildWhichIsA("Humanoid") then
-        outline.OutlineColor = isHorse(instance) and outlineSettings.horseColor or outlineSettings.npcColor
-    end
-    
-    outline.Parent = instance
-    outlines[instance] = outline
-end
-
-local function removeOutline(instance)
-    task.wait(0.1)
-    if outlines[instance] then
-        outlines[instance]:Destroy()
-        outlines[instance] = nil
-    end
-end
-
-local function continuousScan()
-    while scanActive do
-        for _, instance in ipairs(workspace:GetDescendants()) do
-            task.spawn(function()
-                task.wait(0.1)
-                if shouldOutline(instance) then
-                    if not outlines[instance] then
-                        applyOutline(instance)
-                    end
-                else
-                    if outlines[instance] then
-                        removeOutline(instance)
-                    end
-                end
-            end)
-        end
-        task.wait(outlineSettings.scanInterval)
-    end
-end
-
-local function startScanning()
-    if not scanActive then
-        scanActive = true
-        task.spawn(continuousScan)
-    end
-end
-
-local function stopScanning()
-    scanActive = false
-end
-
-local function updateOutlines()
-    task.wait(0.1)
-    if outlineSettings.npcEnabled or outlineSettings.corpseEnabled or 
-       outlineSettings.oreEnabled or outlineSettings.toolEnabled or 
-       outlineSettings.itemEnabled then
-        startScanning()
-    else
-        stopScanning()
-        for instance, outline in pairs(outlines) do
-            task.spawn(function()
-                removeOutline(instance)
-            end)
-        end
-        outlines = {}
-    end
-end
-
-local VisualTab = Window:CreateTab("Visual Tab", "eye")
-local ToggleSection = VisualTab:CreateSection("Outline Toggles")
-VisualTab:CreateLabel("All Outlines Still In Dev And Unoptimized So Yeah")
-
-local NPCsToggle = VisualTab:CreateToggle({
-    Name = "NPC Outlines",
-    CurrentValue = outlineSettings.npcEnabled,
-    Flag = "NPCsToggle",
-    Callback = function(Value)
-        task.wait(0.1)
-        outlineSettings.npcEnabled = Value
-        updateOutlines()
-    end,
-})
-
-local CorpsesToggle = VisualTab:CreateToggle({
-    Name = "Corpse Outlines",
-    CurrentValue = outlineSettings.corpseEnabled,
-    Flag = "CorpsesToggle",
-    Callback = function(Value)
-        task.wait(0.1)
-        outlineSettings.corpseEnabled = Value
-        updateOutlines()
-    end,
-})
-
-local OreToggle = VisualTab:CreateToggle({
-    Name = "Ore Outlines",
-    CurrentValue = outlineSettings.oreEnabled,
-    Flag = "OreToggle",
-    Callback = function(Value)
-        task.wait(0.1)
-        outlineSettings.oreEnabled = Value
-        updateOutlines()
-    end,
-})
-
-local ToolsToggle = VisualTab:CreateToggle({
-    Name = "Tool Outlines",
-    CurrentValue = outlineSettings.toolEnabled,
-    Flag = "ToolsToggle",
-    Callback = function(Value)
-        task.wait(0.1)
-        outlineSettings.toolEnabled = Value
-        updateOutlines()
-    end,
-})
-
-local ItemsToggle = VisualTab:CreateToggle({
-    Name = "Item Outlines",
-    CurrentValue = outlineSettings.itemEnabled,
-    Flag = "ItemsToggle",
-    Callback = function(Value)
-        task.wait(0.1)
-        outlineSettings.itemEnabled = Value
-        updateOutlines()
-    end,
-})
-
-local ScanSlider = VisualTab:CreateSlider({
-    Name = "Scan Interval (seconds)",
-    Range = {0.1, 5},
-    Increment = 0.1,
-    Suffix = "s",
-    CurrentValue = outlineSettings.scanInterval,
-    Flag = "ScanInterval",
-    Callback = function(Value)
-        task.wait(0.1)
-        outlineSettings.scanInterval = Value
-    end,
-})
-
-workspace.DescendantAdded:Connect(function(instance)
-    task.spawn(function()
-        task.wait(0.1)
-        if shouldOutline(instance) then
-            applyOutline(instance)
-        end
-    end)
-end)
-
-workspace.DescendantRemoving:Connect(function(instance)
-    task.spawn(function()
-        task.wait(0.1)
-        removeOutline(instance)
-    end)
-end)
-
-task.defer(function()
-    task.wait(0.1)
-    updateOutlines()
-    Rayfield:Notify({
-        Title = "Outline System Ready",
-        Content = "Continuous scanning with refresh activated!",
-        Duration = 3,
-        Image = nil,
-    })
-end)
-
+-- NoClip Section
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
 local running = false
@@ -519,6 +275,9 @@ player.CharacterAdded:Connect(function(newChar)
         coroutine.wrap(NoClipLoop)()
     end
 end)
+
+local VisualTab = Window:CreateTab("VisualTab", "eye")
+VisualTab:CreateLabel("Remove for now while Rewriting Please Wait.")
 
 local NoClipTab = Window:CreateTab("NoClip", "annoyed")
 
