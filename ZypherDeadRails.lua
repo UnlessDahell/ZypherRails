@@ -5,7 +5,7 @@ local Window = Rayfield:CreateWindow({
    Icon = 0, 
    LoadingTitle = "This is Beta Test Expected For Bug And Unfunctional Options",
    LoadingSubtitle = "by !RENDER , VoxLar, Zypher",
-   Theme = "Bloom", 
+   Theme = "DarkBlue", 
 
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false, 
