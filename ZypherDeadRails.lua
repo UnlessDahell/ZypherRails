@@ -5,15 +5,15 @@ local Window = Rayfield:CreateWindow({
    Icon = 0, 
    LoadingTitle = "This is Beta Test Expected For Bug And Unfunctional Options",
    LoadingSubtitle = "by !RENDER , VoxLar, Zypher",
-   Theme = "Default", 
+   Theme = "Bloom", 
 
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false, 
 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = "ZypherHubFile", 
-      FileName = "DeadRailsZ"
+      FolderName = "VexisHubFile", 
+      FileName = "DeadRailsV"
    },
 })
 
