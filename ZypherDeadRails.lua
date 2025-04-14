@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "ZypherHub (Dead Rails Ver Beta 1.1)",
+   Name = "Vexis Hub (Dead Rails Ver Beta 1.1)",
    Icon = 0, 
    LoadingTitle = "This is Beta Test Expected For Bug And Unfunctional Options",
    LoadingSubtitle = "by !RENDER , VoxLar, Zypher",
