@@ -47,6 +47,7 @@ FOVCircle.Visible = false
 FOVCircle.Position = Vector2.new()
 
 local AimTab = Window:CreateTab("Aimbot", "crosshair")
+AimTab:CreateLabel("Seem not working cool with KRNL.")
 
 AimTab:CreateToggle({
     Name = "Enable Aim",
