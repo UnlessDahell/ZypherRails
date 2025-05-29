@@ -19,13 +19,13 @@ local Window = Fluent:CreateWindow({
 
 -- Tabs
 local Tabs = {
-    FarT = Window:AddTab({ Title = "nothing", Icon = "rbxassetid://121302760641013" }),
-    Ma = Window:AddTab({ Title = "Main", Icon = "rbxassetid://121302760641013" }),
-    Ite = Window:AddTab({ Title = "Items", Icon = "rbxassetid://121302760641013" }),
-    TpT = Window:AddTab({ Title = "Teleport", Icon = "rbxassetid://121302760641013" }),
-    Player = Window:AddTab({ Title = "Player", Icon = "rbxassetid://121302760641013" }),
-    Misc = Window:AddTab({ Title = "Misc", Icon = "rbxassetid://121302760641013" }),
-    Settings = Window:AddTab({ Title = "Setting", Icon = "rbxassetid://121302760641013" }),
+    FarT = Window:AddTab({ Title = "nothing", Icon = "-" }),
+    Ma = Window:AddTab({ Title = "Main", Icon = "-" }),
+    Ite = Window:AddTab({ Title = "Items", Icon = "-" }),
+    TpT = Window:AddTab({ Title = "Teleport", Icon = "-" }),
+    Player = Window:AddTab({ Title = "Player", Icon = "-" }),
+    Misc = Window:AddTab({ Title = "Misc", Icon = "-" }),
+    Settings = Window:AddTab({ Title = "Setting", Icon = "-" }),
 }
 
 do
@@ -252,7 +252,7 @@ do
             Icon.Size = UDim2.new(0, 24, 0, 24)
             Icon.Position = UDim2.new(0, 5, 0, 3)
             Icon.BackgroundTransparency = 1
-            Icon.Image = "rbxassetid://121302760641013" -- Replace with actual image asset ID
+            Icon.Image = "icon are here vro 🥀" -- Replace with actual image asset ID
             Icon.Parent = MainFrame
 
             local Title = Instance.new("TextLabel")
