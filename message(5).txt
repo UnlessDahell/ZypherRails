@@ -8,10 +8,10 @@ local minimizeUI = Enum.KeyCode.RightAlt
 
 -- 🟢 Create Main UI
 local Window = Fluent:CreateWindow({
-    Title = "Vexis hub [RaVo]",
+    Title = "K-Low Hub (.gg/P5CwdCTAMw)",
     SubTitle = "Dead Rails",
     TabWidth = 160,
-    Size = UDim2.fromOffset(480, 360),
+    Size = UDim2.fromOffset(540, 380),
     Acrylic = false,
     Theme = "Darker",
     MinimizeKey = minimizeUI
@@ -19,13 +19,13 @@ local Window = Fluent:CreateWindow({
 
 -- Tabs
 local Tabs = {
-    FarT = Window:AddTab({ Title = "nothing", Icon = "rbxassetid://121302760641013" }),
-    Ma = Window:AddTab({ Title = "Main", Icon = "rbxassetid://121302760641013" }),
-    Ite = Window:AddTab({ Title = "Items", Icon = "rbxassetid://121302760641013" }),
-    TpT = Window:AddTab({ Title = "Teleport", Icon = "rbxassetid://121302760641013" }),
-    Player = Window:AddTab({ Title = "Player", Icon = "rbxassetid://121302760641013" }),
-    Misc = Window:AddTab({ Title = "Misc", Icon = "rbxassetid://121302760641013" }),
-    Settings = Window:AddTab({ Title = "Setting", Icon = "rbxassetid://121302760641013" }),
+    FarT = Window:AddTab({ Title = "Fun tab :)", Icon = "Icon will be added later" }),
+    Ma = Window:AddTab({ Title = "Main", Icon = "Icon will be added later" }),
+    Ite = Window:AddTab({ Title = "Items", Icon = "Icon will be added later" }),
+    TpT = Window:AddTab({ Title = "Teleport", Icon = "Icon will be added later" }),
+    Player = Window:AddTab({ Title = "Player", Icon = "Icon will be added later" }),
+    Misc = Window:AddTab({ Title = "Misc", Icon = "Icon will be added later" }),
+    Settings = Window:AddTab({ Title = "Setting", Icon = "Icon will be added later" }),
 }
 
 do
@@ -42,7 +42,7 @@ do
 
     Tabs.FarT:AddParagraph({
         Title = "Note",
-        Content = "• Auto farm very soon."
+        Content = "• Well join our discord it already exist"
     })
 
     
@@ -50,7 +50,7 @@ do
 
 
 
-    Tabs.Ma:AddSection("↳ Class")
+    Tabs.Ma:AddSection("• Class Bypass")
 
     Tabs.Ma:AddButton({
         Title = "Get Horse Class",
@@ -74,7 +74,7 @@ do
         end
     })
 
-    Tabs.Ma:AddSection("↳ Aimbot")
+    Tabs.Ma:AddSection("• Aimbot")
 
     Tabs.Ma:AddButton({
         Title = "Aimbot V1",
