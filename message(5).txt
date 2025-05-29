@@ -19,7 +19,7 @@ local Window = Fluent:CreateWindow({
 
 -- Tabs
 local Tabs = {
-    FarT = Window:AddTab({ Title = "nothing", Icon = "-" }),
+    FarT = Window:AddTab({ Title = "Blank", Icon = "-" }),
     Ma = Window:AddTab({ Title = "Main", Icon = "-" }),
     Ite = Window:AddTab({ Title = "Items", Icon = "-" }),
     TpT = Window:AddTab({ Title = "Teleport", Icon = "-" }),
@@ -42,7 +42,7 @@ do
 
     Tabs.FarT:AddParagraph({
         Title = "Note",
-        Content = "• Auto farm very soon."
+        Content = "• Join our discord for it!"
     })
 
     
@@ -1188,7 +1188,7 @@ do
 
 
 
-local auraScriptName = "AuraEffect" -- Tên giả định để tìm hiệu ứng, bạn có thể đổi tùy theo script tạo ra gì
+local auraScriptName = "AuraEffect" -- This one was define
 
 local auraToggle = Tabs.Ma:AddToggle("AuraToggle", {
     Title = "Melee Aura V3",
@@ -1197,7 +1197,6 @@ local auraToggle = Tabs.Ma:AddToggle("AuraToggle", {
 
 auraToggle:OnChanged(function(Value)
     if Value then
-        -- Bật: tải và chạy script từ link
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Shade-vex/Dead-Rails-V3/refs/heads/main/Melle-Aura.lua.txt"))()
     else
         -- Tắt: tìm và xóa hiệu ứng liên quan (tùy vào script tạo gì, bạn sửa lại nếu biết rõ hơn)
